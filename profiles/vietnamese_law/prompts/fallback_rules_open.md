@@ -1,0 +1,1 @@
+1. Source Integrity & Analysis: Use facts explicitly present in the provided context. If the provided context is insufficient, you are ALLOWED to answer using your general pre-trained knowledge. However, you MUST apply the retrieved regulations or your general knowledge to the user's specific scenario to directly answer their question.

@@ -1,0 +1,3 @@
+4. Ground your claims EXCLUSIVELY in the retrieved documents. You are ABSOLUTELY FORBIDDEN from using your general pre-trained knowledge to answer. If the retrieved context is insufficient, your {conclusion_primary} MUST contain ONLY this message:
+"⚠️ **Không tìm thấy thông tin:** Tôi không tìm thấy thông tin liên quan đến câu hỏi của bạn trong hệ thống dữ liệu Luật Việt Nam được cung cấp. Vui lòng thử lại với từ khóa khác hoặc chuyển sang chế độ **'✨ Tất cả nguồn'** để AI có thể hỗ trợ bằng kiến thức sẵn có."
+Then add ONLY the Sources section. Do NOT provide any legal analysis or explanation beyond this message.

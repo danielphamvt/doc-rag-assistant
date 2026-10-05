@@ -1,0 +1,129 @@
+<!-- Architecture page: renders the two system diagrams client-side with local mermaid.min.js.
+     Content mirrored from plans/reports/system-architecture-260824-2315-technical-interview-report.md -->
+<div id="arch-page">
+  <div class="arch-hero">
+    <h1>System Architecture</h1>
+    <p>Agentic RAG over any document corpus — orchestrated query decomposition, parallel
+      retrieval branches, hybrid search with reranking, and a pluggable model layer. Fully local by default.</p>
+  </div>
+
+  <div class="arch-section">
+    <h2>1 · Layered Architecture</h2>
+    <p class="arch-caption">Six cooperating layers plus two cross-cutting concerns. Each layer owns one
+      responsibility and exposes a clear contract.</p>
+    <pre class="mermaid">
+flowchart TB
+    subgraph CROSS["Cross-Cutting Concerns"]
+        STATE["Shared State & Memory<br/>conversation history · session persistence"]
+        OBS["Observability<br/>prompt logging · tracing"]
+    end
+
+    subgraph P["1 · Presentation Layer"]
+        UI["Conversational Interface<br/>streaming responses · source citations"]
+    end
+
+    subgraph C["2 · Conversation Layer"]
+        CTX["Context Manager<br/>history summarization"]
+        QU["Query Understanding<br/>decomposition · classification<br/>ambiguity detection"]
+    end
+
+    subgraph O["3 · Orchestration Layer"]
+        ROUTE["Router<br/>complexity-based dispatch"]
+        AGG["Synthesizer<br/>merge branch results → cited answer"]
+    end
+
+    subgraph E["4 · Execution Layer"]
+        S1["Single-hop Branch<br/>one retrieval pass"]
+        S2["Forced-tool Branch<br/>user-directed action"]
+        S3["Agentic Branch<br/>iterative tool loop<br/>reflect · retry · stop"]
+    end
+
+    subgraph T["5 · Tool Layer"]
+        RT["Knowledge Retrieval Tool"]
+        XT["External Search Tool"]
+    end
+
+    subgraph R["6 · Knowledge Layer"]
+        IDX[("Hybrid Index<br/>semantic + lexical")]
+        RER["Reranker<br/>precision reordering"]
+        STORE[("Context Store<br/>full-document lookup")]
+        CORP["Source Corpus"]
+    end
+
+    M["Model Layer<br/>pluggable LLM providers<br/>local or hosted"]
+
+    UI --> CTX --> QU --> ROUTE
+    ROUTE -->|fan-out| S1 & S2 & S3
+    S3 --> RT & XT
+    S1 --> AGG
+    S2 --> AGG
+    S3 --> AGG
+    AGG --> UI
+
+    RT --> IDX --> RER --> STORE
+    CORP --> IDX
+    CORP --> STORE
+
+    C -.-> M
+    E -.-> M
+    O -.-> M
+    STATE -.-> C
+    OBS -.-> M
+    </pre>
+  </div>
+
+  <div class="arch-section">
+    <h2>2 · Query Lifecycle</h2>
+    <p class="arch-caption">Every question travels this path. Three escalation tiers keep cost
+      proportional to difficulty — the expensive agent loop runs only when decomposition justifies it.</p>
+    <pre class="mermaid">
+flowchart TD
+    IN(["User question"]) --> CLS{"Trivial?<br/>greeting / small talk"}
+    CLS -->|yes| DIR["Direct answer<br/>no retrieval, no LLM"]
+    CLS -->|no| CXT["Compress context<br/>if history exceeds budget"]
+
+    CXT --> DEC{"Understand query"}
+    DEC -->|"ambiguous"| HIL["Ask user for clarification<br/>pause — human-in-the-loop"]
+    HIL -->|"user replies"| DEC
+    DEC -->|"simple"| ONE["Tier 1<br/>single retrieval pass"]
+    DEC -->|"user-forced"| FRC["Tier 2<br/>direct tool invocation"]
+    DEC -->|"compound"| AG["Tier 3<br/>agentic loop per sub-question"]
+
+    AG --> LOOP{"Tool needed<br/>and within budget?"}
+    LOOP -->|yes| TOOL["Invoke tool<br/>retrieve → rerank → reflect"]
+    TOOL --> BUD{"Context size<br/>over threshold?"}
+    BUD -->|yes| CMP["Compress working context"]
+    CMP --> AG
+    BUD -->|no| AG
+    LOOP -->|"answered / budget hit"| FALL["Graceful fallback"]
+
+    ONE --> SYN["Synthesis<br/>merge results · attach citations"]
+    FRC --> SYN
+    FALL --> SYN
+    AG --> SYN
+    SYN --> OUT(["Cited answer"])
+    </pre>
+  </div>
+
+  <div class="arch-section">
+    <h2>3 · Design Principles</h2>
+    <div class="arch-grid">
+      <div class="arch-card"><b>Retrieve small, return large</b><span>Index fine-grained chunks for
+        precision; expand to full parent sections for generation context.</span></div>
+      <div class="arch-card"><b>Hybrid search</b><span>Semantic recall + lexical precision — identifiers,
+        numbers and exact names need keyword matching.</span></div>
+      <div class="arch-card"><b>Rerank after recall</b><span>Over-fetch candidates cheaply, then
+        reorder with a heavier model — recall and precision decoupled.</span></div>
+      <div class="arch-card"><b>Cost-proportional routing</b><span>Trivial → rules; simple → single
+        pass; compound → agent loop. Pay for agency only when justified.</span></div>
+      <div class="arch-card"><b>Ask, don't hallucinate</b><span>Ambiguity pauses execution for user
+        input instead of forcing a confident wrong answer.</span></div>
+      <div class="arch-card"><b>Bounded agency</b><span>Hard caps on tool calls and iterations;
+        graceful fallback guarantees termination.</span></div>
+      <div class="arch-card"><b>Context budgeting</b><span>Continuous summarization keeps
+        multi-turn loops inside the model window.</span></div>
+      <div class="arch-card"><b>Traceability</b><span>Every generated claim maps back to a
+        retrievable source document.</span></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+/* Styles for the /architecture demo page */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.arch-back {
+  display: inline-block;
+  margin: 16px 24px 0;
+  padding: 8px 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  color: #4f46e5;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+.arch-back:hover { background: #eef2ff; }
+
+#arch-page { max-width: 1100px; margin: 0 auto; padding: 8px 24px 48px; }
+
+.arch-hero { padding: 20px 0 8px; }
+.arch-hero h1 { margin: 0 0 8px; font-size: 30px; }
+.arch-hero p { margin: 0; color: #475569; font-size: 15px; line-height: 1.6; max-width: 820px; }
+
+.arch-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-top: 22px;
+}
+.arch-section h2 { margin: 0 0 6px; font-size: 20px; }
+.arch-caption { margin: 0 0 14px; color: #64748b; font-size: 14px; }
+
+/* Diagram containers: center + scroll on small screens */
+.arch-section pre.mermaid {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+/* Design principles card grid */
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+.arch-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: #475569;
+  line-height: 1.55;
+}
+.arch-card b { color: #1e293b; font-size: 14.5px; }
+
+@media (max-width: 720px) {
+  .arch-hero h1 { font-size: 24px; }
+  #arch-page { padding: 8px 14px 32px; }
+  .arch-section { padding: 16px; }
+}

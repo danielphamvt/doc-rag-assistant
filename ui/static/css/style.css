@@ -1,0 +1,1528 @@
+body,
+.gradio-container,
+.gradio-container * {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+/* ---- Force light theme (deterministic, CSS-only) ----
+   Gradio applies dark-mode tokens when the OS/browser prefers dark. We
+   override the theme custom properties at every level they may be declared
+   on (root, body, container) AND style the chatbot surfaces directly, so
+   everything renders light with dark, readable text regardless of the JS
+   class stripping in focus.js. */
+:root,
+body,
+body.dark,
+.gradio-container,
+.gradio-container.dark {
+    color-scheme: light !important;
+    --body-background-fill: #ffffff !important;
+    --body-text-color: #0f172a !important;
+    --body-text-color-subdued: #64748b !important;
+    --background-fill-primary: #ffffff !important;
+    --background-fill-secondary: #f7f7f8 !important;
+    --block-background-fill: #ffffff !important;
+    --block-border-color: #ececec !important;
+    --block-label-text-color: #475569 !important;
+    --block-title-text-color: #0f172a !important;
+    --input-background-fill: #f7f7f8 !important;
+    --input-border-color: #ececec !important;
+    --input-text-color: #0f172a !important;
+    --input-placeholder-color: #64748b !important;
+    --button-secondary-background-fill: #ffffff !important;
+    --button-secondary-text-color: #334155 !important;
+    --border-color-primary: #ececec !important;
+    --border-color-accent: #e47451 !important;
+    --shadow-drop: rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Dark readable text inside the chat input frame (light background) */
+textarea {
+    color: #0f172a !important;
+}
+
+textarea::placeholder {
+    color: #64748b !important;
+}
+
+/* Chatbot output area and bubbles — explicit light rendering, since the
+   Chatbot component does not fully follow the theme tokens above */
+#chat-box,
+#chat-box .wrapper,
+#chat-box .wrap,
+#chat-box .bubble-wrap,
+#chat-box .placeholder-wrap {
+    background: transparent !important;
+    color: #0f172a !important;
+}
+
+#chat-box .placeholder {
+    color: #64748b !important;
+}
+
+/* Flat chat look (gradio 5.x DOM: .message-row.user-row / .bot-row + .message):
+   assistant text sits directly on the page (no bubble), the user question
+   gets a soft neutral bubble on the right — never the dark default #334155 */
+/* Answer text keeps a readable measure (~75ch) inside the wide column */
+#chat-box .bot-row .md,
+#chat-box .message.bot .md {
+    max-width: 800px !important;
+}
+
+#chat-box .bot-row .message,
+#chat-box .message.bot {
+    background: transparent !important;
+    border: none !important;
+    color: #0f172a !important;
+    max-width: min(92%, 900px) !important;
+}
+
+#chat-box .user-row .message,
+#chat-box .message.user {
+    background: #e8ebf0 !important;
+    color: #0f172a !important;
+    border: none !important;
+    border-radius: 16px !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    padding: 10px 16px !important;
+    overflow-wrap: anywhere !important;
+}
+
+#chat-box [data-testid="user"] .message {
+    background: transparent !important;
+    border: none !important;
+}
+
+#chat-box .user-row {
+    /* gradio's .message is width:100% inside this fit-content row; without an
+       explicit fit-content here the circular sizing collapses the row (and the
+       bubble with it) to min-content — one word per line */
+    width: fit-content !important;
+    margin-left: auto !important;
+}
+
+/* Markdown content inside messages — light-mode tables, quotes, rules */
+.message-wrap .message table {
+    border-color: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+.message-wrap .message th,
+.message-wrap .message td {
+    border-color: #e2e8f0 !important;
+    background: transparent !important;
+    color: #0f172a !important;
+}
+
+.message-wrap .message blockquote {
+    border-left: 3px solid #cbd5e1 !important;
+    color: #475569 !important;
+    background: #f8fafc !important;
+}
+
+.message-wrap .message hr {
+    border-color: #e2e8f0 !important;
+}
+
+/* Text selection follows the light theme */
+::selection {
+    background: rgba(228, 116, 81, 0.25);
+    color: #0f172a;
+}
+
+/* No horizontal scrollbars anywhere except inside code blocks */
+body,
+html,
+gradio-app,
+.gradio-container,
+#app-shell,
+#main,
+#sidebar,
+.conv-list {
+    overflow-x: hidden !important;
+}
+
+/* Full-height frame: sidebar + main shell, page scroll locked (chat area only) */
+body,
+html,
+gradio-app {
+    height: 100vh !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.gradio-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    /* Lock the outer container scroll */
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Two-pane shell: fixed sidebar + flexible main column.
+   align-items:stretch overrides gradio's flex-start on Rows so #main
+   (and the bottom-pinned input bar) spans the full window height. */
+#app-shell {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
+#sidebar {
+    position: relative !important;
+    flex: 0 0 auto !important;
+    width: 280px;
+    min-width: 180px !important;
+    max-width: 650px !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    border-right: 1px solid #e2e8f0 !important;
+    background: #f0f4f9 !important;
+    padding: 12px 12px 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+/* Sidebar resizer divider (placed between #sidebar and #main) */
+#sidebar-resizer,
+.sidebar-resizer {
+    position: relative !important;
+    width: 10px !important;
+    min-width: 10px !important;
+    max-width: 10px !important;
+    margin-left: -5px !important;
+    margin-right: -5px !important;
+    z-index: 100 !important;
+    cursor: col-resize !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    flex: 0 0 10px !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    transition: background 0.15s ease;
+}
+
+/* Vertical guide line inside the resizer strip */
+#sidebar-resizer::before,
+.sidebar-resizer::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 4px !important;
+    width: 2px !important;
+    background: #e2e8f0 !important;
+    transition: background 0.15s ease, width 0.15s ease;
+}
+
+#sidebar-resizer:hover::before,
+#sidebar-resizer.is-dragging::before,
+.sidebar-resizer:hover::before,
+.sidebar-resizer.is-dragging::before {
+    background: #e47451 !important;
+    width: 3px !important;
+    left: 3.5px !important;
+}
+
+/* Center handle pill (middle of the divider) — revealed on hover/drag only;
+     a permanently visible blob mid-edge reads as noise */
+.resizer-handle-pill {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 6px !important;
+    height: 38px !important;
+    border-radius: 999px !important;
+    background: #cbd5e1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 2 !important;
+    opacity: 0;
+    transition: background 0.15s ease, height 0.15s ease, width 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+.handle-bar {
+    width: 2px !important;
+    height: 16px !important;
+    border-radius: 1px !important;
+    background: #ffffff !important;
+    opacity: 0.8 !important;
+}
+
+#sidebar-resizer:hover .resizer-handle-pill,
+#sidebar-resizer.is-dragging .resizer-handle-pill,
+.sidebar-resizer:hover .resizer-handle-pill,
+.sidebar-resizer.is-dragging .resizer-handle-pill {
+    background: #e47451 !important;
+    width: 8px !important;
+    height: 48px !important;
+    box-shadow: 0 2px 6px rgba(228, 116, 81, 0.4) !important;
+    opacity: 1;
+}
+
+/* Global cursor & drag lock while resizing */
+body.is-resizing {
+    cursor: col-resize !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+body.is-resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    pointer-events: none !important;
+}
+
+body.is-resizing #sidebar-resizer,
+body.is-resizing #sidebar-resizer *,
+body.is-resizing .sidebar-resizer,
+body.is-resizing .sidebar-resizer * {
+    pointer-events: auto !important;
+}
+
+/* Collapse toggle: hide sidebar and resizer divider when collapsed */
+#app-shell.collapsed #sidebar,
+#app-shell.collapsed #sidebar-resizer,
+#app-shell.collapsed .sidebar-resizer {
+    display: none !important;
+}
+
+/* Floating expand button — appears at the top-left of the main column only
+   while the sidebar is collapsed, so the pane can always be brought back */
+#sidebar-expand {
+    display: none;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 400;
+    width: 38px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #444746;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+#app-shell.collapsed #sidebar-expand {
+    display: flex;
+}
+
+#sidebar-expand:hover {
+    background: #e9edf3;
+}
+
+#sidebar-expand svg {
+    width: 20px;
+    height: 20px;
+}
+
+#main {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 26px 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Sidebar section labels ("Chats") */
+.sidebar-label {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: #5f6368 !important;
+    padding: 10px 8px 4px !important;
+    margin: 0 !important;
+}
+
+.sidebar-list {
+    gap: 1px !important;
+    padding: 0 !important;
+}
+
+.sidebar-item {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+    height: 36px !important;
+    padding: 0 10px !important;
+    font-size: 0.83rem !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 999px !important;
+    color: #444746 !important;
+    transition: background 0.15s ease !important;
+}
+
+.sidebar-item:hover {
+    background: #e4e9f1 !important;
+    color: #0f172a !important;
+}
+
+/* New-chat action: compact, elegant pill on the middle-left */
+#new-chat-btn {
+    height: 34px !important;
+    min-height: 34px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: fit-content !important;
+    flex: 0 0 auto !important;
+    align-self: flex-start !important;
+    margin: 2px 0 4px 0 !important;
+    border: 1px solid #dadce0 !important;
+    border-radius: 999px !important;
+    background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f1f1f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z'/%3E%3C/svg%3E") no-repeat 11px center / 15px 15px !important;
+    color: #1f1f1f !important;
+    font-size: 0.84rem !important;
+    font-weight: 500 !important;
+    box-shadow: 0 1px 2px rgba(32, 33, 36, 0.06) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 0 16px 0 33px !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease !important;
+}
+
+#new-chat-btn:hover {
+    background-color: #f8fafc !important;
+    border-color: #bdc1c6 !important;
+    box-shadow: 0 2px 5px rgba(32, 33, 36, 0.12) !important;
+}
+
+#new-chat-btn:active {
+    transform: scale(0.97) !important;
+}
+
+/* Sample questions accordion: quiet pill, clear SVG chevron */
+#sample-questions {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 2px 0 4px 0 !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+#sample-questions > div {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+}
+
+/* Accordion header button */
+#sample-questions > .label-wrap,
+#sample-questions button.label-wrap,
+#sample-questions .label-wrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 10px 0 12px !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+    color: #444746 !important;
+    font-size: 0.84rem !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    transition: background-color 0.15s ease, color 0.15s ease !important;
+}
+
+#sample-questions > .label-wrap:hover,
+#sample-questions button.label-wrap:hover,
+#sample-questions .label-wrap:hover {
+    background: #e4e9f1 !important;
+    color: #1f1f1f !important;
+}
+
+/* Completely eradicate the native unicode triangle "▼" from Gradio */
+#sample-questions .label-wrap .icon,
+#sample-questions .label-wrap > .icon,
+#sample-questions .label-wrap span.icon {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Crisp SVG chevron that never distorts or loses strokes */
+#sample-questions .label-wrap::after {
+    content: '' !important;
+    display: inline-block !important;
+    flex: 0 0 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-left: auto !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23444746' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E") no-repeat center center / 14px 14px !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease !important;
+    transform-origin: center center !important;
+    opacity: 0.75 !important;
+}
+
+#sample-questions .label-wrap:hover::after,
+#sample-questions button.label-wrap:hover::after {
+    opacity: 1 !important;
+}
+
+#sample-questions .label-wrap.open::after,
+#sample-questions [aria-expanded="true"] .label-wrap::after,
+#sample-questions [open] .label-wrap::after {
+    transform: rotate(90deg) !important;
+}
+
+/* Conversation search box: strip gradio's outer block frame */
+#conv-search {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 2px 0 6px 0 !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Gradio textarea wrappers */
+#conv-search label,
+#conv-search .input-container,
+#chat-input label,
+#chat-input .input-container {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 0 !important;
+}
+
+#conv-search textarea {
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+    resize: none !important;
+    white-space: nowrap !important;
+}
+
+/* Search pill: middle-left aligned icon + placeholder, perfectly balanced */
+#conv-search textarea,
+#conv-search textarea:focus,
+#conv-search textarea:focus-visible {
+    background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 11px center / 15px 15px !important;
+    border: 1px solid #dadce0 !important;
+    border-radius: 999px !important;
+    box-shadow: 0 1px 2px rgba(32, 33, 36, 0.04) !important;
+    outline: none !important;
+    width: 100% !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    box-sizing: border-box !important;
+    padding: 8px 12px 8px 34px !important;
+    font-size: 0.84rem !important;
+    line-height: 18px !important;
+    color: #1f1f1f !important;
+    caret-color: #1f1f1f !important;
+    text-align: left !important;
+    overflow: hidden !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
+}
+
+#conv-search textarea:hover {
+    border-color: #bdc1c6 !important;
+}
+
+#conv-search textarea:focus {
+    border-color: #e47451 !important;
+    box-shadow: 0 0 0 2px rgba(228, 116, 81, 0.15) !important;
+    background-color: #ffffff !important;
+}
+
+#conv-search textarea::placeholder {
+    color: #70757a !important;
+    font-size: 0.84rem !important;
+    line-height: 18px !important;
+    text-align: left !important;
+    vertical-align: middle !important;
+}
+
+#conv-search:focus-within {
+    box-shadow: none !important;
+}
+
+/* Persisted conversation history: fills the leftover sidebar height and
+   scrolls independently; never scrolls horizontally */
+.conv-list {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding-bottom: 4px !important;
+}
+
+.conv-empty {
+    padding: 10px 14px !important;
+    font-size: 0.8rem !important;
+    color: #5f6368 !important;
+}
+
+/* History row = ONE pill: the row itself highlights on hover and the delete
+   icon appears inside the same pill, right of the title (never a second box) */
+.conv-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0 !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex-wrap: nowrap !important;
+    overflow: hidden !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 4px 0 0 !important;
+    min-height: 0 !important;
+    transition: background 0.15s ease !important;
+}
+
+.conv-row:hover {
+    background: #e4e9f1 !important;
+}
+
+.conv-row.active {
+    background: #e2e7ef !important;
+}
+
+.conv-row.active .conv-title {
+    font-weight: 600 !important;
+    color: #0f172a !important;
+}
+
+.conv-row .conv-title {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 999px !important;
+    height: 38px !important;
+    padding: 0 8px 0 16px !important;
+    font-size: 0.84rem !important;
+    color: #1f1f1f !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+}
+
+.conv-row .conv-title:hover {
+    background: transparent !important;
+}
+
+.conv-delete {
+    flex: 0 0 auto !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 50% !important;
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2'/%3E%3Cpath d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/%3E%3Cpath d='M10 11v6'/%3E%3Cpath d='M14 11v6'/%3E%3C/svg%3E") no-repeat center / 15px 15px !important;
+    opacity: 0;
+    transition: opacity 0.15s ease, background-color 0.15s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+}
+
+.conv-row:hover .conv-delete,
+.conv-delete:focus {
+    opacity: 1;
+}
+
+.conv-delete:hover {
+    background-color: #d3d9e3 !important;
+}
+
+.conv-list::-webkit-scrollbar {
+    width: 5px !important;
+}
+
+.conv-list::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+.conv-list::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.3) !important;
+    border-radius: 10px !important;
+}
+
+/* Flexbox fix (gradio 5.x DOM): pass viewport height down the wrapper chain
+   main.fillable → .wrap → .contain → root .column, so the app shell fills the
+   window at ANY resolution and the input bar pins to the bottom.
+   (Old gradio-4 selectors like `.main` match nothing in 5.50.) */
+.gradio-container > main,
+.gradio-container > main > .wrap,
+.gradio-container > main > .wrap > .contain,
+.gradio-container > main > .wrap > .contain > .column {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    flex-grow: 1 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    /* Important to remove the second scrollbar */
+}
+
+/* Thin, subtle scrollbar for the chat frame */
+div[class*="bubble-wrap"]::-webkit-scrollbar,
+#chat-box div::-webkit-scrollbar {
+    width: 5px !important;
+}
+
+div[class*="bubble-wrap"]::-webkit-scrollbar-track,
+#chat-box div::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+div[class*="bubble-wrap"]::-webkit-scrollbar-thumb,
+#chat-box div::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.3) !important;
+    border-radius: 10px !important;
+}
+
+div[class*="bubble-wrap"]::-webkit-scrollbar-thumb:hover,
+#chat-box div::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(86, 88, 105, 0.45) !important;
+}
+
+/* Enlarge the chatbot avatar icon */
+#chat-box .avatar-image,
+#chat-box .avatar-container {
+    width: 45px !important;
+    height: 45px !important;
+    min-width: 45px !important;
+    border-radius: 50% !important;
+}
+
+#chat-box .avatar-image img,
+#chat-box .avatar-container img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+#chat-box {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    /* Prevent layout overflow; flat surface — a card frame around an empty
+       conversation area reads as a box, not a chat */
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-top: 8px !important;
+    margin-top: 4px !important;
+    background: transparent !important;
+    /* Reading measure: wide, centered conversation column */
+    width: 100% !important;
+    max-width: 880px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Custom styling for Code block */
+code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+pre {
+    background-color: #f6f8fa;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+/* Input frame: white stadium bar pinned to the bottom of the main column */
+#custom-input-container {
+    gap: 0 !important;
+    margin-top: auto !important;
+    margin-bottom: 16px !important;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+    width: 100% !important;
+    max-width: 880px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+}
+
+#custom-input-container .input-row {
+    background: #ffffff !important;
+    border: 1px solid #dadce0 !important;
+    border-radius: 999px !important;
+    padding: 4px 6px 4px 10px !important;
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    overflow: visible !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    min-height: 52px !important;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+}
+
+#custom-input-container .input-row:focus-within {
+    border-color: #c7cbd1 !important;
+    box-shadow: 0 2px 10px rgba(32, 33, 36, 0.12) !important;
+}
+
+#chat-input textarea,
+#chat-input textarea:focus {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    /* 1rem keeps Safari iOS from auto-zooming the field on focus */
+    font-size: 1rem !important;
+    padding: 12px 0 !important;
+    color: #1f1f1f !important;
+    /* Long questions wrap, but the box must not grow into a tall column */
+    max-height: 160px !important;
+    overflow-y: auto !important;
+}
+
+/* Gemini Plus Menu inside Chat Input */
+#input-plus-menu-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    align-self: center !important;
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    height: 36px !important;
+    position: relative !important;
+    overflow: visible !important;
+    z-index: 500 !important;
+}
+
+/* Hide Gradio loading overlay inside plus wrapper so it does not push the button down */
+#input-plus-menu-wrapper > .wrap {
+    display: none !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+#input-plus-menu-wrapper .html-container,
+#input-plus-menu-wrapper .prose,
+#plus-menu-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+}
+
+.plus-menu-container {
+    position: relative !important;
+    overflow: visible !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.plus-btn {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    background: transparent !important;
+    color: #444746 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease !important;
+    outline: none !important;
+}
+
+.plus-btn:hover {
+    background-color: #f1f3f4 !important;
+    color: #1f1f1f !important;
+}
+
+.plus-btn:active {
+    transform: scale(0.94) !important;
+}
+
+.plus-btn.is-open {
+    background-color: #e8eaed !important;
+    color: #1f1f1f !important;
+}
+
+.plus-btn svg {
+    display: block !important;
+    pointer-events: none !important;
+}
+
+/* Gemini Source Dropdown Menu (Opens upwards above the plus button) */
+.plus-dropdown {
+    display: none !important;
+    position: absolute !important;
+    bottom: calc(100% + 14px) !important;
+    left: -4px !important;
+    min-width: 190px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    padding: 6px !important;
+    z-index: 999999 !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    user-select: none !important;
+}
+
+.plus-dropdown.is-open {
+    display: flex !important;
+    animation: plusMenuSlideUp 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes plusMenuSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.plus-dropdown-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 9px 14px !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    font-size: 0.93rem !important;
+    font-weight: 500 !important;
+    color: #1e293b !important;
+    transition: background-color 0.12s ease, color 0.12s ease !important;
+}
+
+.plus-dropdown-item:hover {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+
+.plus-dropdown-item.active {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+.plus-item-check {
+    width: 18px !important;
+    height: 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    color: #1e293b !important;
+}
+
+.plus-item-check svg {
+    display: none !important;
+    stroke: currentColor !important;
+}
+
+.plus-dropdown-item.active .plus-item-check svg {
+    display: block !important;
+}
+
+.plus-item-title {
+    font-size: 0.93rem !important;
+    line-height: 1.2 !important;
+}
+
+/* Round send button: orange circle with an inline white arrow (data URI) */
+#submit-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: #e47451 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5'/%3E%3Cpath d='M5 12l7-7 7 7'/%3E%3C/svg%3E") no-repeat center / 20px 20px !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 1px 4px rgba(228, 116, 81, 0.35) !important;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+#submit-btn:hover {
+    box-shadow: 0 2px 10px rgba(228, 116, 81, 0.5) !important;
+}
+
+/* Stop button: same circle as Send, charcoal with a square stop glyph —
+   swaps in for Send while the reply streams */
+#stop-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: #3c4043 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='7' y='7' width='10' height='10' rx='1.5' fill='%23ffffff'/%3E%3C/svg%3E") no-repeat center / 18px 18px !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 1px 4px rgba(32, 33, 36, 0.3) !important;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+#stop-btn:hover {
+    background-color: #1f1f1f !important;
+    box-shadow: 0 2px 10px rgba(32, 33, 36, 0.4) !important;
+}
+
+#stop-btn:focus-visible {
+    outline: 2px solid rgba(228, 116, 81, 0.55) !important;
+    outline-offset: 2px !important;
+}
+
+/* Welcome hero: large greeting in the empty chat area, reference-style */
+#welcome-hero {
+    text-align: left;
+    padding: 16vh 24px 0;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+#welcome-hero h1 {
+    margin: 0 0 8px;
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.2;
+    color: #1f1f1f;
+}
+
+#welcome-hero .hero-name {
+    background: linear-gradient(74deg, #4285f4 15%, #9b72cb 55%, #d96570 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#welcome-hero p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #444746;
+}
+
+/* Brand header — icon + wordmark row at the top of the sidebar */
+#app-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 4px 6px;
+    margin-bottom: 2px;
+    background: transparent;
+    border: none;
+    color: #1f1f1f;
+}
+
+#sidebar-collapse {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #444746;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+#sidebar-collapse:hover {
+    background: #e4e9f1;
+}
+
+#sidebar-collapse svg {
+    width: 20px;
+    height: 20px;
+}
+
+#app-header .brand-text {
+    min-width: 0;
+}
+
+#app-header h1 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #1f1f1f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Profile pill pinned at the bottom of the sidebar */
+#profile-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    margin-top: 6px;
+    border-radius: 999px;
+    cursor: default;
+    transition: background 0.15s ease;
+}
+
+#profile-pill:hover {
+    background: #e4e9f1;
+}
+
+#profile-pill .profile-avatar {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4285f4, #9b72cb);
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+#profile-pill .profile-name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #1f1f1f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+#app-footer .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    font-size: 0.64rem;
+    font-weight: 500;
+    border-radius: 999px;
+    background: #e4e9f1;
+    border: none;
+    color: #444746;
+}
+
+/* Softer chat bubbles */
+.message-wrap .message {
+    border-radius: 18px !important;
+    line-height: 1.65;
+}
+
+/* Input area */
+footer {
+    display: none !important;
+}
+
+/* Sidebar footer: badges + disclaimer kept compact above the profile pill */
+#app-footer {
+    margin-top: 4px;
+    padding: 8px 6px 0;
+    border-top: 1px solid #dadce0;
+}
+
+#app-footer .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+#app-footer .disclaimer {
+    margin: 0;
+    font-size: 0.68rem;
+    line-height: 1.45;
+    color: #5f6368;
+}
+
+#app-footer .disclaimer strong {
+    color: #444746;
+}
+
+/* Hide the overridden "chatbot" label — only inside the chat frame */
+#chat-box .label-wrap {
+    display: none !important;
+}
+
+/* Hide gradio's built-in Clear button (top-right): it only wipes the display
+   while the conversation stays open in the store — "New chat" is the real
+   control and the duplicate invites state mismatch */
+#chat-box .icon-button[aria-label="Clear"] {
+    display: none !important;
+}
+
+/* NOTE: there is intentionally NO generic `.form` rule — gradio puts the
+   `form` class on every Row (app shell, sidebar history rows...), so a
+   generic .form background/padding pollutes all of them. The input bar is
+   styled via `.input-row` under #custom-input-container below. */
+
+/* Child flex components */
+/* Child flex components */
+#command-chip-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    height: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: fit-content !important;
+    flex: 0 0 auto !important;
+}
+
+#command-chip-wrapper > *,
+#command-chip-wrapper .html-container,
+#command-chip-wrapper .prose {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    width: auto !important;
+    min-width: 0 !important;
+}
+
+#chat-input,
+#chat-input > label,
+#chat-input .input-container,
+#chat-input textarea {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+#chat-input {
+    flex: 1 1 0% !important;
+    /* Take all remaining horizontal space */
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#chat-input textarea,
+#chat-input textarea:focus {
+    /* 1rem keeps Safari iOS from auto-zooming the field on focus */
+    font-size: 1rem !important;
+    padding: 14px 10px !important;
+    color: #1f1f1f !important;
+    min-height: 48px !important;
+    max-height: 160px !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    resize: none !important;
+    overflow-y: auto !important;
+}
+
+/* Command chip display */
+.cmd-chip {
+    background: #e9e9eb !important;
+    color: #3f3f46 !important;
+    padding: 4px 8px 4px 10px !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    user-select: none !important;
+    pointer-events: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    line-height: 1.2 !important;
+}
+
+.cmd-chip-remove {
+    background: transparent !important;
+    border: none !important;
+    color: #71717a !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 16px !important;
+    height: 16px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background-color 0.12s ease, color 0.12s ease !important;
+}
+
+.cmd-chip-remove:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: #18181b !important;
+}
+
+/* Spinner CSS Animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite !important;
+}
+
+/* Reasoning box: compact aside — readable, capped height when open */
+#reasoning-box,
+.reasoning-box {
+    font-size: 0.9em !important;
+    background: #f1f3f7 !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 6px 12px !important;
+    max-height: 340px !important;
+    overflow-y: auto !important;
+}
+
+#reasoning-box>summary,
+.reasoning-box>summary {
+    font-size: 1.11em !important;
+    /* 1.11 * 0.9 ≈ 1.0 (the original size) */
+    font-style: normal !important;
+    cursor: pointer !important;
+    /* Native disclosure triangle → same stroke chevron as the sidebar
+       accordion, rotating with the open state */
+    list-style: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+#reasoning-box>summary::-webkit-details-marker,
+.reasoning-box>summary::-webkit-details-marker {
+    display: none !important;
+}
+
+#reasoning-box>summary::after,
+.reasoning-box>summary::after {
+    content: '' !important;
+    flex: 0 0 auto !important;
+    width: 7px !important;
+    height: 7px !important;
+    margin-left: auto !important;
+    border-right: 2px solid #444746 !important;
+    border-bottom: 2px solid #444746 !important;
+    transform: rotate(-45deg) !important;
+    transition: transform 0.15s ease !important;
+}
+
+#reasoning-box[open]>summary::after,
+.reasoning-box[open]>summary::after {
+    transform: rotate(45deg) !important;
+}
+
+#reasoning-box div,
+.reasoning-box div {
+    font-style: normal !important;
+    color: #334155 !important;
+}
+
+/* Fix the wrapper Gradio uses around .form to prevent overflow.
+   Only applied to the main layout wrapper, NOT the dropdown's internal .wrap */
+.gradio-container > .main > .wrap {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Architecture badge link in header — flat pill, indigo text */
+#app-footer .badge.arch-link {
+    text-decoration: none;
+    cursor: pointer;
+    background: #f4f4f5;
+    border: none;
+    color: #4f46e5;
+    font-weight: 600;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+#app-footer .badge.arch-link:hover {
+    background: #dbe1ea;
+    color: #3730a3;
+}
+#app-footer .badge.arch-link svg {
+    flex: 0 0 auto;
+}
+
+/* Keyboard focus — visible ring ONLY on buttons (textareas would show a
+   peach ring around the inner field, which fragments behind the pill frame;
+   textareas indicate focus via the pill's border/shadow instead) */
+.sidebar-item:focus-visible,
+#submit-btn:focus-visible,
+.conv-delete:focus-visible {
+    outline: 2px solid rgba(228, 116, 81, 0.55) !important;
+    outline-offset: 2px !important;
+}
+
+textarea:focus-visible {
+    outline: none !important;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 720px) {
+    /* Shell stacks: sidebar becomes a compact top strip */
+    #app-shell {
+        flex-direction: column !important;
+    }
+
+    #sidebar {
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        max-height: 224px !important;
+        border-right: none !important;
+        border-bottom: 1px solid #dadce0 !important;
+        padding: 10px 12px 8px !important;
+    }
+
+    /* Mobile strip shows the essentials: brand, new chat, skill, Chats + search.
+       Sample questions and badges are desktop furniture. */
+    #sample-questions,
+    #app-footer {
+        display: none !important;
+    }
+
+    /* Keep the brand row and skill selector; collapse the question list.
+       Search goes too — its list is hidden, leaving an orphan cut-off control. */
+    .sidebar-list,
+    .sidebar-label,
+    #conv-search,
+    /* Sidebar resizer is desktop furniture */
+    #sidebar-resizer,
+    .sidebar-resizer {
+        display: none !important;
+    }
+
+    #main {
+        padding: 0 12px 10px !important;
+    }
+
+    #chat-box .avatar-image,
+    #chat-box .avatar-container {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+    }
+}

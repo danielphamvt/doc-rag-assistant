@@ -1,0 +1,30 @@
+{
+  "name": "eu_ai_act",
+  "description": "Assistant for the EU Artificial Intelligence Act",
+  "response_language": "English",
+
+  "source_display_names": {
+    "eu_ai_act_final.pdf": "The EU AI Act",
+    "eu_ai_act_annexes.pdf": "EU AI Act - Annexes"
+  },
+
+  "source_keywords": [
+    "ai act", "artificial intelligence act", "eu ai act", "article", "annex", "recital"
+  ],
+
+  "chunk_separators": [
+    "\nTitle ", "\nChapter ", "\nSection ", "\nArticle ", "\nAnnex ", 
+    "\n1. ", "\n(1) ", "\n(a) ", "\n- ", "\n\n", "\n", ". ", " ", ""
+  ],
+
+  "complex_query_keywords": [
+    "compare", "analyze", "synthesize", "why", "how", "example", 
+    "difference", "impact", "evaluate", "latest"
+  ],
+
+  "internet_search": {
+    "query_suffixes": [
+      "eu ai act", "european union artificial intelligence act"
+    ]
+  }
+}

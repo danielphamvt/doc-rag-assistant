@@ -1,0 +1,64 @@
+{
+  "name": "vietnamese_law",
+  "description": "Trợ lý tra cứu văn bản pháp luật Việt Nam",
+  "response_language": "Vietnamese",
+
+  "source_display_names": {
+    "luat_hinh_su.pdf": "Bộ Luật Hình sự",
+    "luat_dan_su.pdf": "Bộ Luật Dân sự"
+  },
+
+  "source_keywords": ["hiến pháp", "hình sự", "dân sự", "lao động", "đất đai"],
+
+  "chunk_separators": [
+    "\nKhoản ", "\nĐiểm ", "\n- ", "\n+ ", "\n\n", "\n", ". ", " ", ""
+  ],
+
+  "complex_query_keywords": [
+    "so sánh", "phân biệt", "phân tích", "tại sao", "tổng hợp",
+    "như thế nào", "ví dụ", "mới nhất", "năm nay", "hiện nay", "hiện tại"
+  ],
+
+  "greetings": [
+    "hi", "hello", "hey",
+    "chào", "chào bạn", "xin chào", "xin chào bạn",
+    "cảm ơn", "cảm ơn bạn", "thank you", "thanks",
+    "tạm biệt", "bye", "goodbye"
+  ],
+
+  "small_talk": {
+    "thanks_triggers": ["cảm ơn", "thank", "thanks"],
+    "farewell_triggers": ["tạm biệt", "bye"],
+    "thanks_response": "Không có chi! Bạn cần tôi giúp gì thêm không?",
+    "farewell_response": "Tạm biệt! Hẹn gặp lại bạn lần sau.",
+    "default_response": "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?"
+  },
+
+  "internet_search": {
+    "query_suffixes": [
+      "năm nào", "khi nào", "như thế nào", "thế nào", "ở đâu",
+      "bao nhiêu", "là gì", "mấy", "sao", "được không", "có được không"
+    ]
+  },
+
+  "markers": {
+    "reasoning_primary": "[SUY LUẬN]",
+    "conclusion_primary": "[KẾT LUẬN]",
+    "reasoning": ["[SUY LUẬN]", "SUY LUẬN:", "**SUY LUẬN:**", "**SUY LUẬN**"],
+    "conclusion": [
+      "[KẾT LUẬN]", "KẾT LUẬN:", "**KẾT LUẬN:**", "**KẾT LUẬN**",
+      "TRẢ LỜI:", "**TRẢ LỜI:**", "CÂU TRẢ LỜI:", "ĐÁP ÁN:"
+    ]
+  },
+
+  "strings": {
+    "retrieval_no_results": "Không tìm thấy tài liệu nào khớp với truy vấn trong cơ sở dữ liệu.",
+    "forced_tool_empty_query": "Vui lòng nhập nội dung câu hỏi sau lệnh.",
+    "no_answers_generated": "No answers were generated.",
+    "unable_to_answer": "Unable to generate an answer.",
+    "no_query_fallback": "Không có câu hỏi cụ thể, vui lòng dựa vào dữ liệu dưới đây để tóm tắt.",
+    "internet_no_results": "Không tìm thấy kết quả nào trên internet.",
+    "internet_timeout": "Tìm kiếm internet quá thời gian chờ. Vui lòng thử lại sau.",
+    "internet_error": "Lỗi khi tìm kiếm internet: {error}"
+  }
+}

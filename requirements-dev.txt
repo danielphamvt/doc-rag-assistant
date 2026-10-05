@@ -1,0 +1,5 @@
+# Development / test dependencies
+pytest==9.1.1
+
+# Headless UI verification (uses installed Google Chrome via channel="chrome")
+playwright
